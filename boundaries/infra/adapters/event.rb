@@ -14,6 +14,12 @@ module Boundaries
           !!(event.summary =~ /refining/i)
         end
 
+        def duration
+          return 0 if event.end.date_time.nil?
+
+          (event.end.date_time - event.start.date_time).to_f * 24
+        end
+
         private
 
         attr_reader :event
