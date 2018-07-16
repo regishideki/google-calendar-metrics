@@ -1,6 +1,6 @@
 require 'google/apis/calendar_v3'
 require './boundaries/infra/authorization'
-require './boundaries/infra/adapters/event'
+require './boundaries/infra/gateway'
 
 APPLICATION_NAME = 'Google Calendar'.freeze
 
@@ -9,17 +9,12 @@ authorization = Boundaries::Infra::Authorization.new.authorize(service)
 service.client_options.application_name = APPLICATION_NAME
 service.authorization = authorization
 
-calendar_id = 'primary'
-response = service.list_events(calendar_id,
-                               max_results: 10,
-                               single_events: true,
-                               order_by: 'startTime',
-                               time_min: Time.now.iso8601)
-puts 'Upcoming events:'
-puts 'No upcoming events found' if response.items.empty?
+events = Boundaries::Infra::Gateway.new(service).list_events
 
-response.items.each do |google_api_event|
-  event = Boundaries::Infra::Adapters::Event.new(google_api_event)
+puts 'Upcoming events:'
+puts 'No upcoming events found' if events.empty?
+
+events.each do |event|
   duration = (event.end.date_time - event.start.date_time).to_f * 24
   puts "- #{event.summary} (#{duration}) #{event.refining?}"
 end
