@@ -7,9 +7,8 @@ module Boundaries
   module Infra
     class Authorization
       OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'.freeze
-      APPLICATION_NAME = 'Google Calendar'.freeze
-      CLIENT_SECRETS_PATH = 'client_secrets_creditas.json'.freeze
-      CREDENTIALS_PATH = 'token.yaml'.freeze
+      CLIENT_SECRETS_PATH = 'secrets/client_secrets_creditas.json'.freeze
+      CREDENTIALS_PATH = 'secrets/token.yaml'.freeze
       SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
 
       def authorize(service)

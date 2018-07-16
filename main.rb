@@ -1,5 +1,6 @@
 require 'google/apis/calendar_v3'
 require './boundaries/infra/authorization'
+require './boundaries/infra/adapters/event'
 
 APPLICATION_NAME = 'Google Calendar'.freeze
 
@@ -17,26 +18,8 @@ response = service.list_events(calendar_id,
 puts 'Upcoming events:'
 puts 'No upcoming events found' if response.items.empty?
 
-class Event
-  extend Forwardable
-
-  def_delegators :@event, :start, :end, :summary
-
-  def initialize(google_api_event)
-    @event = google_api_event
-  end
-
-  def refining?
-    !!(event.summary =~ /refining/i)
-  end
-
-  private
-
-  attr_reader :event
-end
-
 response.items.each do |google_api_event|
-  event = Event.new(google_api_event)
+  event = Boundaries::Infra::Adapters::Event.new(google_api_event)
   duration = (event.end.date_time - event.start.date_time).to_f * 24
   puts "- #{event.summary} (#{duration}) #{event.refining?}"
 end
