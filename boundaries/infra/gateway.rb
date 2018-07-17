@@ -1,16 +1,12 @@
 require './boundaries/infra/adapters/event'
-require './boundaries/infra/authorization'
+require './boundaries/infra/services/google_calendar'
 
 module Boundaries
   module Infra
     class Gateway
-      APPLICATION_NAME = 'Google Calendar'.freeze
-
       def initialize
         @event_adapter_class = Boundaries::Infra::Adapters::Event
-        @service = Google::Apis::CalendarV3::CalendarService.new
-        service.client_options.application_name = APPLICATION_NAME
-        service.authorization = Boundaries::Infra::Authorization.new.authorize(service)
+        @service = Boundaries::Infra::Services::GoogleCalendar.new
       end
 
       def list_events(parameters = {})
@@ -27,6 +23,8 @@ module Boundaries
 
       private
 
+      attr_reader :service, :event_adapter_class
+
       def build_response(response)
         response.items.map(&method(:build_event))
       end
@@ -34,8 +32,6 @@ module Boundaries
       def build_event(google_api_event)
         event_adapter_class.new(google_api_event)
       end
-
-      attr_reader :service, :event_adapter_class
     end
   end
 end
