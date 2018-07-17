@@ -11,7 +11,7 @@ module Boundaries
       CREDENTIALS_PATH = 'secrets/token.yaml'.freeze
       SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
 
-      def authorize(service)
+      def credentials
         client_id = Google::Auth::ClientId.from_file(CLIENT_SECRETS_PATH)
         token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
         authorizer = Google::Auth::UserAuthorizer.new(client_id, SCOPE, token_store)
