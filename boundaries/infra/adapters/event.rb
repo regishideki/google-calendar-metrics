@@ -6,8 +6,8 @@ module Boundaries
 
         def_delegators :@event, :start, :end, :summary
 
-        def initialize(google_api_event)
-          @event = google_api_event
+        def initialize(google_event)
+          @event = google_event
         end
 
         def refining?
