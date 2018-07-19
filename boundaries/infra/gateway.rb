@@ -4,9 +4,9 @@ require './boundaries/infra/services/google_calendar'
 module Boundaries
   module Infra
     class Gateway
-      def initialize
-        @event_adapter_class = Boundaries::Infra::Adapters::Event
-        @service = Boundaries::Infra::Services::GoogleCalendar.new
+      def initialize(overrides = {})
+        @event_adapter_class = overrides.fetch(:event_adapter_class) { Boundaries::Infra::Adapters::Event }
+        @service = overrides.fetch(:service) { Boundaries::Infra::Services::GoogleCalendar.new }
       end
 
       def list_events(parameters = {})
