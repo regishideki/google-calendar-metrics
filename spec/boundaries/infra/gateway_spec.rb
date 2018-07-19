@@ -7,7 +7,7 @@ describe Boundaries::Infra::Gateway do
       Timecop.freeze do
         event_adapter_class = class_double(Boundaries::Infra::Adapters::Event)
         event_adapter_instance = instance_double(Boundaries::Infra::Adapters::Event)
-        service = instance_spy(Boundaries::Infra::Services::GoogleCalendar)
+        service = instance_spy(Boundaries::Infra::Services::Calendar)
         events = double('events', items: [event = double('event')])
         allow(service).to receive(:list_events).with(
           'primary',
